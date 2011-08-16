@@ -73,7 +73,8 @@
 		echo '</td>';
 		echo '</tr>';
 	}
-
+	
+	/* Thanks to 'vld' over at irc.frantech.ca for providing me with the following two functions! */
 	function sec_human($sec) {
 		if($sec < 60) { return $sec.'s'; }
 		$tstring = '';
@@ -103,17 +104,5 @@
 			</div>
 			<div class="clear">Generated in <?php echo $end - $start; ?>s.</div>
 		</div>
-<!-- Piwik --> 
-<script type="text/javascript">
-var pkBaseURL = (("https:" == document.location.protocol) ? "https://analytics.svr.im/" : "http://analytics.svr.im/");
-document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-</script><script type="text/javascript">
-try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 3);
-piwikTracker.trackPageView();
-piwikTracker.enableLinkTracking();
-} catch( err ) {}
-</script><noscript><p><img src="http://analytics.svr.im/piwik.php?idsite=3" style="border:0" alt="" /></p></noscript>
-<!-- End Piwik Tracking Code -->
 	</body>
 </html>
