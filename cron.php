@@ -14,7 +14,7 @@
 	if ($result) {
 		$ra = $dbs->fetchAll(PDO::FETCH_ASSOC);
 		foreach ($ra as $i => $row) {
-			$fp = @fsockopen($row['hostname'], 12908, $errno, $errstr, 5);
+			$fp = @fsockopen($row['hostname'], $port, $errno, $errstr, 5);
 			if (!$fp) {
 				$ping = Net_Ping::factory();
 				$ping->setArgs(array('count' => 8));
