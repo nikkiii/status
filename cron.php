@@ -20,12 +20,12 @@
 				$ping->setArgs(array('count' => 8));
 				$pr = $ping->ping($row['hostname']);
 				if ($pr->_loss == "0") {
-					updateserver(1, 'n/a', 'n/a', 'n/a', 'n/a', '0', 'n/a', 'n/a', 'n/a', $row['uid']);
+					updateserver(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $row['uid']);
 					if ($row['status'] == '0') {
 						mail($email, 'Server '. $row['uid'] .' is up!', 'Server '. $row['uid'] .' on node '. $row['node'] .' is up. That rocks!');
 					}
 				} else {
-					updateserver(0, 'n/a', 'n/a', 'n/a', 'n/a', '0', 'n/a', 'n/a', 'n/a', $row['uid']);
+					updateserver(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $row['uid']);
 					if ($row['status'] == '1') {
 						mail($email, 'Server '. $row['uid'] .' is down', 'Server '. $row['uid'] .' on node '. $row['node'] .' is down. That sucks!');
 					}
