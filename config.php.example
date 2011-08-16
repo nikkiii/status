@@ -1,0 +1,5 @@
+<?php
+	$email = 'administrator@example.com';
+	$port = 12908; 	
+	$db = '/srv/servers.example.com/servers.db';
+?>

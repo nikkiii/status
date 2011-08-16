@@ -1,0 +1,119 @@
+<?php
+	require('../config.php');
+	$start = microtime();
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Cache-Control: no-store, no-cache, must-revalidate');
+	header('Cache-Control: post-check=0, pre-check=0', false);
+	header('Pragma: no-cache');
+	header('Refresh: 60');
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Server statistics</title>
+		<style type="text/css">
+			body{font-family:Helvetica, Verdana;}h1{font-size:32px;}div#wrapper{width:95%;margin-left:auto;margin-right:auto;position:relative;text-align:center;}div.stats_container{position:relative;text-align:center;}div.clear{clear:both;font-size:small;}div.stats_status{font-size:12px;color:red;margin-top:2px;margin-bottom:10px;}table,td{border:1px solid #CCC;font-size:11.5px;margin:0 auto;}thead th,tbody th{background:url(data:image/gif;base64,R0lGODlhAQAfALMAAPLz9fn6/fv8/vX1+Pf5++/w8e3u7+rq6+rr7AAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAABAB8AAAQQ8MiDqjElgz06+UEYCGQZAQA7) repeat-x;color:#666;border:1px solid #CCC;padding:5px 10px;}tfoot td,tfoot th{border:1px solid #CCC;color:#666;padding:4px;}div.progress-container{border:1px solid #ccc;width:100px;text-align:left;background:#FFF;text-size:3px;float:left;margin:2px 5px 2px 0;padding:1px;}div.progress-container-percent{padding:2px;}div.progress-container > div{background-color:/*#ACE97C*/#00BFFF;height:12px;}.offline{background-color:#FFE6E6;}.online-but-no-data{background-color:#3F6;}.5pad{padding:5px;}.bartext{text-align:center;width:100px;}.loadavg{-moz-border-radius:5px;border-radius:5px;text-align:center;padding:2px;}a:link,a:active,a:visited{color:#666;text-decoration:underline;}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+			<h1>Server statistics</h1>
+			<div class="stats_container" id="stats">
+				<div class="stats_table" id="table">
+		<table border="1">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Unique ID</th>
+				<th scope="col">Node</th>
+				<th scope="col">Last Updated</th>
+				<th scope="col">Uptime</th>
+				<th scope="col">RAM</th>
+				<th scope="col">Load</th>
+			</tr>
+		</thead>
+			<tfoot>
+
+<?php
+	try {
+		$db = new PDO('sqlite:'. $db);
+	} catch (PDOException $e) {
+		die('Unable to connect to the database - please try again later.');
+	}
+	$dbs = $db->prepare('SELECT * FROM servers WHERE disabled = 0 ORDER BY provider ASC');
+	$result = $dbs->execute();
+	$i = 0;
+	$provider = '';
+	while ($row = $dbs->fetch(PDO::FETCH_ASSOC)) {
+		$i++;
+		if ($row['provider'] != $provider) {
+			echo '<tr><td colspan="7" style="text-align: left; padding-top:9px; padding-bottom: 2px; font-weight: bold; font-size: 10px; padding-left: 5px;">'. $row['provider'] .'</td></tr>';
+			$provider = $row['provider'];
+		}
+	   	if ($row['status'] == "0") {
+			echo '<tr style="text-align: center" class="offline">';
+		} elseif ($row['uptime'] == "n/a") {
+			echo '<tr style="text-align: center" class="online-but-no-data">';
+		} else {
+			echo '<tr style="text-align: center">';
+		}
+		echo '<td>'. $i .'</td>';
+		echo '<td>'. $row['uid'] .'</td>';
+		echo '<td>'. $row['node'] .'</td>';
+		echo '<td>'. sec_human(time() - $row['time']) .'</td>';
+		echo '<td>'. $row['uptime'] .'</td>';
+		$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
+		$used = $row['mused'] - $row['mbuffers'];
+		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
+		echo '<td class="5pad">';
+		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load1']).'">'. sprintf('%.02f', $row['load1']) .'</span>&nbsp;';
+		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
+		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load15']).'">'. sprintf('%.02f', $row['load15']) .'</span>&nbsp;';
+		echo '</td>';
+		echo '</tr>';
+	}
+
+	function sec_human($sec) {
+		if($sec < 60) { return $sec.'s'; }
+		$tstring = '';
+		$days  = floor($sec / 86400);
+		$hrs   = floor(bcmod($sec, 86400) / 3600);
+		$mins  = round(bcmod(bcmod($sec, 86400), 3600) / 60);
+		if($days > 0) { $tstring = $days.'d '; }
+		if($hrs  > 0) { $tstring .= $hrs.'h '; }
+		if($mins > 0) { $tstring .= $mins.'m '; }
+		return substr($tstring, 0, -1);
+	}
+
+	function gen_color($load) {
+		$green = 0;
+		$red = 3;
+		$colors = array('00FF00', '11FF00', '22FF00', '33FF00', '44FF00', '55FF00', '66FF00', '77FF00', '88FF00', '99FF00', 'AAFF00', 'BBFF00', 'CCFF00', 'DDFF00', 'EEFF00', 'FFFF00', 'FFEE00', 'FFDD00', 'FFCC00', 'FFBB00', 'FFAA00', 'FF9900', 'FF8800', 'FF7700', 'FF6600', 'FF5500', 'FF4400', 'FF3300', 'FF2200', 'FF1100', 'FF0000');
+		$count = count($colors)-1;
+		$map = intval((($load - $green) * $count) / ($red - $green));
+		if($map > $count) { $map = $count; }
+		return $colors[$map];
+	}
+	$end = microtime();
+?>
+			</tfoot>
+	</table>
+				</div>
+			</div>
+			<div class="clear">Generated in <?php echo $end - $start; ?>s.</div>
+		</div>
+<!-- Piwik --> 
+<script type="text/javascript">
+var pkBaseURL = (("https:" == document.location.protocol) ? "https://analytics.svr.im/" : "http://analytics.svr.im/");
+document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script type="text/javascript">
+try {
+var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 3);
+piwikTracker.trackPageView();
+piwikTracker.enableLinkTracking();
+} catch( err ) {}
+</script><noscript><p><img src="http://analytics.svr.im/piwik.php?idsite=3" style="border:0" alt="" /></p></noscript>
+<!-- End Piwik Tracking Code -->
+	</body>
+</html>
