@@ -2,8 +2,10 @@
 + The server status project   +
 + --------------------------- +
 
-* Requires Net/Ping
-* Requires scrd (or compatible output) - https://github.com/dimecadmium/scrd
+Requires:
+  * Net/Ping
+  * SQLite3 PHP Module
+  * scrd (or daemon with compatible output) - https://github.com/dimecadmium/scrd
 
 Please report any bugs or feature requests you may encounter.
-  - If you do not have a github account feel free to contact me on IRC: irc.cedr.ca 6667/+667 - #dev
+  - If you do not have a github account feel free to contact me on IRC: irc.cedr.ca 6667/+6697 - #dev
