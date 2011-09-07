@@ -56,6 +56,7 @@ This file is part of the status project.
 	try {
 		$db = new PDO('sqlite:'. $db);
 	} catch (PDOException $e) {
+		error_log($_SERVER['SCRIPT_FILENAME'] .' - Unable to connect to the database: '. $e);
 		die('Unable to connect to the database - please try again later.');
 	}
 	$dbs = $db->prepare('SELECT * FROM servers WHERE disabled = 0 ORDER BY provider ASC');
