@@ -85,8 +85,14 @@ This file is part of the status project.
 		$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
 		$used = $row['mused'] - $row['mbuffers'];
 		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
-		$mp = ($row['diskused']/$row['disktotal'])*100;
-		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. format_kbytes($row['diskused']) .'/'. format_kbytes($row['disktotal']) .'GB</div></div></div></td>';
+		echo '<td class="5pad">';
+		if(isset($row['diskused'])) {
+			$mp = ($row['diskused']/$row['disktotal'])*100;
+			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. format_kbytes($row['diskused']) .'/'. format_kbytes($row['disktotal']) .'GB</div></div></div>';
+		} else {
+			echo 'N/A';
+		}
+		echo '</td>';
 		echo '<td class="5pad">';
 		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load1']).'">'. sprintf('%.02f', $row['load1']) .'</span>&nbsp;';
 		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
