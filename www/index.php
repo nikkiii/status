@@ -16,7 +16,7 @@ This file is part of the status project.
     along with the status project.  If not, see <http://www.gnu.org/licenses/>.
 */
 	require('../config.php');
-	$start = microtime();
+	$start = microtime(true);
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Cache-Control: no-store, no-cache, must-revalidate');
 	header('Cache-Control: post-check=0, pre-check=0', false);
@@ -128,13 +128,13 @@ This file is part of the status project.
 		if($map > $count) { $map = $count; }
 		return $colors[$map];
 	}
-	$end = microtime();
+	$end = microtime(true);
 ?>
 			</tfoot>
 	</table>
 				</div>
 			</div>
-			<div class="clear">Generated in <?php echo $end - $start; ?>s.</div>
+			<div class="clear">Generated in <?php echo round(($end - $start) * 1000, 2); ?>ms.</div>
 		</div>
 	</body>
 </html>
