@@ -33,12 +33,12 @@ This file is part of the status project.
 		</style>
 	</head>
 	<body>
-		<a href="https://github.com/cedricd/status"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+		<a href="https://github.com/nikkiii/status"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/30f550e0d38ceb6ef5b81500c64d970b7fb0f028/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
 		<div id="wrapper">
 			<h1>Server statistics</h1>
 			<div class="stats_container" id="stats">
 				<div class="stats_table" id="table">
-		<table border="1">
+		<table style="border: 1;">
 		<thead>
 			<tr>
 				<th scope="col">#</th>
@@ -47,6 +47,7 @@ This file is part of the status project.
 				<th scope="col">Last Updated</th>
 				<th scope="col">Uptime</th>
 				<th scope="col">RAM</th>
+				<th scope="col">Disk</th>
 				<th scope="col">Load</th>
 			</tr>
 		</thead>
@@ -66,7 +67,7 @@ This file is part of the status project.
 	while ($row = $dbs->fetch(PDO::FETCH_ASSOC)) {
 		$i++;
 		if ($row['provider'] != $provider) {
-			echo '<tr><td colspan="7" style="text-align: left; padding-top:9px; padding-bottom: 2px; font-weight: bold; font-size: 10px; padding-left: 5px;">'. $row['provider'] .'</td></tr>';
+			echo '<tr><td colspan="8" style="text-align: left; vertical-align: middle; font-weight: bold; font-size: 10px; padding-left: 5px;">'. $row['provider'] .'</td></tr>';
 			$provider = $row['provider'];
 		}
 	   	if ($row['status'] == "0") {
@@ -84,12 +85,19 @@ This file is part of the status project.
 		$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
 		$used = $row['mused'] - $row['mbuffers'];
 		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
+		$mp = ($row['diskused']/$row['disktotal'])*100;
+		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. format_kbytes($row['diskused']) .'/'. format_kbytes($row['disktotal']) .'GB</div></div></div></td>';
 		echo '<td class="5pad">';
 		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load1']).'">'. sprintf('%.02f', $row['load1']) .'</span>&nbsp;';
 		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
 		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load15']).'">'. sprintf('%.02f', $row['load15']) .'</span>&nbsp;';
 		echo '</td>';
 		echo '</tr>';
+	}
+	
+	/* From http://www.php.net/manual/en/function.filesize.php#100097, removed bytes*/
+	function format_kbytes($size) {
+		return round($size/1024/1024, 2);
 	}
 	
 	/* Thanks to 'vld' over at irc.frantech.ca for providing me with the following two functions! */

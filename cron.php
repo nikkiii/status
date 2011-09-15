@@ -21,7 +21,7 @@ This file is part of the status project.
 	require 'Net/Ping.php';
 
 	try {
-		$db = new PDO('sqlite:'. $db);
+		$db = new PDO('sqlite:' . $db);
 	} catch (PDOException $e) {
 		die('Unable to connect to the database.'. $e);
 	}
@@ -51,7 +51,7 @@ This file is part of the status project.
 				$result = fgets($fp, 2048);
 				@fclose($fp);
 				$result = json_decode($result, true);
-				updateserver(1, $result['uplo']['uptime'], $result['ram']['total'], $result['ram']['used'], $result['ram']['free'], $result['ram']['bufcac'], $result['uplo']['load1'], $result['uplo']['load5'], $result['uplo']['load15'], $row['uid']);
+				updateserver(1, $result['uplo']['uptime'], $result['ram']['total'], $result['ram']['used'], $result['ram']['free'], $result['ram']['bufcac'], $result['disk']['total']['total'], $result['disk']['total']['used'], $result['disk']['total']['avail'], $result['uplo']['load1'], $result['uplo']['load5'], $result['uplo']['load15'], $row['uid']);
 				if ($row['status'] == "0") {
 					mail($email, 'Server '. $row['uid'] .' is up', 'Server '. $row['uid'] .' on node '. $row['node'] .' is up. That rocks!');
 				}
@@ -59,11 +59,11 @@ This file is part of the status project.
 		}
 	}
 
-	function updateserver($status, $uptime, $mtotal, $mused, $mfree, $mbuffers, $load1, $load5, $load15, $uid) {
+	function updateserver($status, $uptime, $mtotal, $mused, $mfree, $mbuffers, $disktotal, $diskused, $diskfree, $load1, $load5, $load15, $uid) {
 		global $db;
 		try {
-			$dbs = $db->prepare('UPDATE servers SET time = ?, status = ?, uptime = ?, mtotal = ?, mused = ?, mfree = ?, mbuffers = ?, load1 = ?, load5 = ?, load15 = ? WHERE uid = ?');
-			$dbs->execute(array(time(), $status, $uptime, $mtotal, $mused, $mfree, $mbuffers, $load1, $load5, $load15, $uid));
+			$dbs = $db->prepare('UPDATE servers SET time = ?, status = ?, uptime = ?, mtotal = ?, mused = ?, mfree = ?, mbuffers = ?, disktotal = ?, diskused = ?, diskfree = ?, load1 = ?, load5 = ?, load15 = ? WHERE uid = ?');
+			$dbs->execute(array(time(), $status, $uptime, $mtotal, $mused, $mfree, $mbuffers, $disktotal, $diskused, $diskfree, $load1, $load5, $load15, $uid));
 		} catch (PDOException $e) {
 			echo $e;
 			die('Something broke!');
