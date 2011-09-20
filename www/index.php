@@ -82,9 +82,15 @@ This file is part of the status project.
 		echo '<td>'. $row['node'] .'</td>';
 		echo '<td>'. sec_human(time() - $row['time']) .'</td>';
 		echo '<td>'. $row['uptime'] .'</td>';
-		$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
-		$used = $row['mused'] - $row['mbuffers'];
-		echo '<td class="5pad"><div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
+		echo '<td class="5pad">';
+		if(empty($row['mtotal'])) {
+			echo "N/A";
+		} else {
+			$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
+			$used = $row['mused'] - $row['mbuffers'];
+			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
+		}
+		echo '</td>';
 		echo '<td class="5pad">';
 		if(isset($row['diskused'])) {
 			$mp = ($row['diskused']/$row['disktotal'])*100;
