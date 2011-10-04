@@ -84,11 +84,11 @@ This file is part of the status project.
 		echo '<td>'. $row['uptime'] .'</td>';
 		echo '<td class="5pad">';
 		if(empty($row['mtotal'])) {
-			echo "N/A";
+			echo "n/a";
 		} else {
 			$mp = ($row['mused']-$row['mbuffers'])/$row['mtotal']*100;
 			$used = $row['mused'] - $row['mbuffers'];
-			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div></td>';
+			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. $used .'/'. $row['mtotal'] .'MB</div></div></div>';
 		}
 		echo '</td>';
 		echo '<td class="5pad">';
@@ -96,7 +96,7 @@ This file is part of the status project.
 			$mp = ($row['diskused']/$row['disktotal'])*100;
 			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. format_kbytes($row['diskused']) .'/'. format_kbytes($row['disktotal']) .'GB</div></div></div>';
 		} else {
-			echo 'N/A';
+			echo 'n/a';
 		}
 		echo '</td>';
 		echo '<td class="5pad">';
