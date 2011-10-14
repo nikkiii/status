@@ -92,11 +92,11 @@ This file is part of the status project.
 		}
 		echo '</td>';
 		echo '<td class="5pad">';
-		if(isset($row['diskused'])) {
+		if(empty($row['diskused'])) {
+			echo 'n/a';
+		} else {
 			$mp = ($row['diskused']/$row['disktotal'])*100;
 			echo '<div class="progress-container"><div class="progress-container-percent" style="width:'. $mp .'%"><div class="bartext">'. format_kbytes($row['diskused']) .'/'. format_kbytes($row['disktotal']) .'GB</div></div></div>';
-		} else {
-			echo 'n/a';
 		}
 		echo '</td>';
 		echo '<td class="5pad">';
@@ -107,7 +107,6 @@ This file is part of the status project.
 		echo '</tr>';
 	}
 	
-	/* From http://www.php.net/manual/en/function.filesize.php#100097, removed bytes*/
 	function format_kbytes($size) {
 		return round($size/1024/1024, 2);
 	}
