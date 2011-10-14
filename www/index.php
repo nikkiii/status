@@ -15,7 +15,7 @@ This file is part of the status project.
     You should have received a copy of the GNU Affero General Public License
     along with the status project.  If not, see <http://www.gnu.org/licenses/>.
 */
-	require('/usr/local/servers/config.php');
+	require('../config.php');
 	$start = microtime();
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Cache-Control: no-store, no-cache, must-revalidate');
