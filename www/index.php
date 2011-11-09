@@ -104,7 +104,7 @@ This file is part of the status project.
 			echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
 			echo '<span class="loadavg" style="background-color: #'.gen_color($row['load15']).'">'. sprintf('%.02f', $row['load15']) .'</span>&nbsp;';
 		} else {
-			echo '<span class="loadavg" style="background-color: #'.gen_color_windows($row['load1']).'">' .$row['load1'] .'%</span>&nbsp;';
+			echo 'Unknown';
 		}
 		echo '</td>';
 		echo '</tr>';
