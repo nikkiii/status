@@ -26,7 +26,7 @@ This file is part of the status project.
 		die('Unable to connect to the database.'. $e);
 	}
 
-	$dbs = $db->prepare("SELECT * FROM servers WHERE disabled = 0");
+	$dbs = $db->prepare("SELECT * FROM servers WHERE disabled = 0 AND key = 0");
 	$result = $dbs->execute();
 	if ($result) {
 		$ra = $dbs->fetchAll(PDO::FETCH_ASSOC);
@@ -38,25 +38,18 @@ This file is part of the status project.
 				$pr = $ping->ping($row['hostname']);
 				if ($pr->_loss == "0") {
 					updateserver(1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $row['uid']);
-					if ($row['status'] == '0') {
-						mail($email, 'Server '. $row['uid'] .' is up!', 'Server '. $row['uid'] .' on node '. $row['node'] .' is up. That rocks!');
-					}
 				} else {
 					updateserver(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $row['uid']);
-					if ($row['status'] == '1') {
-						mail($email, 'Server '. $row['uid'] .' is down', 'Server '. $row['uid'] .' on node '. $row['node'] .' is down. That sucks!');
-					}
 				}
 			} else {
 				$result = fgets($fp, 2048);
 				@fclose($fp);
 				$result = json_decode($result, true);
 				updateserver(1, $result['uplo']['uptime'], $result['ram']['total'], $result['ram']['used'], $result['ram']['free'], $result['ram']['bufcac'], $result['disk']['total']['total'], $result['disk']['total']['used'], $result['disk']['total']['avail'], $result['uplo']['load1'], $result['uplo']['load5'], $result['uplo']['load15'], $row['uid']);
-				if ($row['status'] == "0") {
-					mail($email, 'Server '. $row['uid'] .' is up', 'Server '. $row['uid'] .' on node '. $row['node'] .' is up. That rocks!');
-				}
 			}
 		}
+	} else {
+		echo "Found no servers...\n";
 	}
 
 	function updateserver($status, $uptime, $mtotal, $mused, $mfree, $mbuffers, $disktotal, $diskused, $diskfree, $load1, $load5, $load15, $uid) {
@@ -68,7 +61,6 @@ This file is part of the status project.
 			echo $e;
 			die('Something broke!');
 		}
-
 	}
 
 ?>

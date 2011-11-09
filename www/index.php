@@ -99,9 +99,13 @@ This file is part of the status project.
 		}
 		echo '</td>';
 		echo '<td class="5pad">';
-		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load1']).'">'. sprintf('%.02f', $row['load1']) .'</span>&nbsp;';
-		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
-		echo '<span class="loadavg" style="background-color: #'.gen_color($row['load15']).'">'. sprintf('%.02f', $row['load15']) .'</span>&nbsp;';
+		if($row['os'] == 0) {
+			echo '<span class="loadavg" style="background-color: #'.gen_color($row['load1']).'">'. sprintf('%.02f', $row['load1']) .'</span>&nbsp;';
+			echo '<span class="loadavg" style="background-color: #'.gen_color($row['load5']).'">'. sprintf('%.02f', $row['load5']) .'</span>&nbsp;';
+			echo '<span class="loadavg" style="background-color: #'.gen_color($row['load15']).'">'. sprintf('%.02f', $row['load15']) .'</span>&nbsp;';
+		} else {
+			echo '<span class="loadavg" style="background-color: #'.gen_color_windows($row['load1']).'">' .$row['load1'] .'%</span>&nbsp;';
+		}
 		echo '</td>';
 		echo '</tr>';
 	}
@@ -122,7 +126,7 @@ This file is part of the status project.
 		if($mins > 0) { $tstring .= $mins.'m '; }
 		return substr($tstring, 0, -1);
 	}
-
+	
 	function gen_color($load) {
 		$green = 0;
 		$red = 3;
@@ -131,6 +135,18 @@ This file is part of the status project.
 		$map = intval((($load - $green) * $count) / ($red - $green));
 		if($map > $count) { $map = $count; }
 		return $colors[$map];
+	}
+	
+	function gen_color_windows($perc) {
+		if($perc >= 90) {
+			return "FF0000";
+		} else if($perc >= 70) {
+			return "FFFF00";
+		} else if($perc >= 50) {
+			return "88FF00";
+		} else {
+			return "00FF00";
+		}
 	}
 	$end = microtime();
 ?>

@@ -5,13 +5,15 @@
 Requires:
   * Net/Ping
   * SQLite3 PHP Module
-  * scrd (or daemon with compatible output) - https://github.com/dimecadmium/scrd (Latest version!)
+  * statsend - https://github.com/dimecadmium/statsend
+  * jstatsend - https://github.com/nikkiii/jstatsend (FOR WINDOWS ONLY)
 
 Please report any bugs or feature requests you may encounter.
-  - If you do not have a github account feel free to contact me on IRC: irc.cedr.ca 6667/+6697 - #dev
+  - If you do not have a github account feel free to contact me on IRC: irc.dairc.net 6667 #nikki
   
 Installing:
-  - Install scrd on remote machines
+  - Install statsend (or jstatsend) on remote machines
+  - Make the servers.db file writable by your webserver user
   Optional:
     - copy "index.php" to your public website directory
     - copy the rest to "/usr/local/status" and update the config url
@@ -20,3 +22,8 @@ Installing:
     - php modify.php --delete=<uid>
     - php modify.php --disable=<uid>
     - php modify.php --enable=<uid>
+Updating:
+  - Move your database to a different file (Like servers.db.old)
+  - Download the new database into the same directory as modify.php
+  - Run modify.php like so: php modify.php --convert=servers.db.old
+  - Use any SQLite program to insert keys (Can be a password but has to be unique per machine!) to enable statsend

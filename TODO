@@ -4,8 +4,4 @@
 +  Stuff to do!               +
 + --------------------------- +
 
-* Setup script
-* Administration interface (perhaps ignore setup script, initial stuff is done from here?)
-* Email on high load/disk space usage/etc
 * Add new field to specify how many cores a VPS has (get from daemon possibly?) to allow for accurate load colours and emails
-
