@@ -31,10 +31,11 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $result = file_get_contents("php://input");
 $result = json_decode($result, true);
 
-$query = $db->prepare("SELECT uid FROM servers WHERE uid = ? AND key = ?");
+$query = $db->prepare("SELECT COUNT(*) AS count FROM servers WHERE uid = ? AND key = ?");
 $query->execute(array($result['uid'], $result['key']));
-if($query->rowCount() < 1) {
-	die("unauthorized");
+$res = $query->fetch(PDO::FETCH_ASSOC);
+if(!$res || $res['count'] == 0) {
+	die("unauthorized\n");
 }
 	
 updateserver(1, $result['uplo']['uptime'], $result['ram']['total'], $result['ram']['used'], $result['ram']['free'], $result['ram']['bufcac'], $result['disk']['total']['total'], $result['disk']['total']['used'], $result['disk']['total']['avail'], $result['uplo']['load1'], $result['uplo']['load5'], $result['uplo']['load15'], $result['uid']);
