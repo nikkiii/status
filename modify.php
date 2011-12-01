@@ -25,8 +25,8 @@ if (isset($args['conf'])) $conf = $args['conf']; else $conf = "config.php";
 
 require $conf;
 
-if($args['help']) {
-	echo "PHP Status Project 1.0 - $args[help]\n";
+if(isset($args['help'])) {
+	echo "PHP Status Project 1.0\n";
 	if($args['help'] == 1) {
 		$contents = "  Useful arguments:\n";
 		$contents .= "\tadd - Add a server to the database\n";
@@ -77,7 +77,7 @@ try {
 }
 
 
-if($args['add']) {
+if(isset($args['add'])) {
 	if(!get("uid", false)) {
 		die("Please specify a uid\n");
 	}
@@ -92,7 +92,7 @@ if($args['add']) {
 	} catch(PDOException $e) {
 		echo "Error occurred while adding server: $e\n";
 	}
-} else if($args['delete']) {
+} else if(isset($args['delete'])) {
 	if(!get("delete", false)) {
 		die("Please specify a uid (--delete=uid)\n");
 	}
@@ -103,17 +103,17 @@ if($args['add']) {
 	} catch(PDOException $e) {
 		echo "Error occurred while removing server: $e\n";
 	}
-} else if($args['enable']) {
+} else if(isset($args['enable'])) {
 	if(!get("enable", false)) {
 		die("Please specify a uid (--enable=<uid>)\n");
 	}
 	set_disabled($args['enable'], false);
-} else if($args['disable']) {
+} else if(isset($args['disable'])) {
 	if(!get("disable", false)) {
 		die("Please specify a uid (--disable=uid)\n");
 	}
 	set_disabled($args['disable'], true);
-} else if($args['convert']) {
+} else if(isset($args['convert'])) {
 	if(file_exists($args['convert'])) {
 		$old = new PDO('sqlite:' . $args['convert']);
 		$q = $old->prepare("SELECT * FROM servers");
